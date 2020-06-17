@@ -1,6 +1,8 @@
+import datetime
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
+from django.utils import timezone
 from SimpleCmsAPI.models import User, BlogPost, Like, Comment
 
 def create_user(username='seladb', first_name='Elad', last_name='B'):
@@ -26,6 +28,7 @@ class UserModelTests(TestCase):
         user1 = User.objects.get(id=1)
         self.assertEqual(user1.username, 'seladb')
         self.assertEqual(user1.first_name, 'Elad')
+        self.assertAlmostEqual(user1.joined, timezone.now(), delta=datetime.timedelta(seconds=3))
 
     def test_user_to_string(self):
         create_user()
@@ -54,6 +57,7 @@ class BlogPostModelTests(TestCase):
         blog_post = BlogPost.objects.get(pk=1)
         self.assertIsNotNone(blog_post)
         self.assertEquals(blog_post.title, 'New Post')
+        self.assertAlmostEqual(blog_post.published, timezone.now(), delta=datetime.timedelta(seconds=3))
 
         with self.assertRaises(BlogPost.DoesNotExist):
             BlogPost.objects.get(pk=2)

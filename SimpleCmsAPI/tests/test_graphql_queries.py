@@ -1,4 +1,6 @@
 import json
+from datetime import datetime, timedelta
+from django.utils import timezone
 from graphene_django.utils.testing import GraphQLTestCase
 from SimpleCMS.schema import schema
 
@@ -70,3 +72,91 @@ class QueryTests(GraphQLTestCase):
         writer_blog_post2 = blog_post2['writer']
         self.assertEquals(writer_blog_post2['username'], 'cooluser')
         self.assertEquals(writer_blog_post2['lastName'], 'User')
+
+    def test_blog_post_query(self):
+
+        response = self.query(
+            '''
+            query blogPostQuery($id: ID!) {
+                blogPost(id: $id) {
+                    published
+                    title
+                    content
+                    writer {
+                        username
+                    }
+                }
+            }
+            ''',
+            variables={ 'id': '1' }
+        )
+
+        self.assertResponseNoErrors(response)
+
+        content = json.loads(response.content)
+        self.assertIsNotNone(content['data'])
+        
+        blog_post = content['data']['blogPost']
+        self.assertEqual(blog_post['title'], 'PcapPlusPlus reached 1000 GitHub stars')
+        self.assertIn('1000 GitHub stars!!', blog_post['content'])
+        self.assertAlmostEqual(datetime.fromisoformat(blog_post['published']), datetime(2020, 6, 15, 21, 16, 4, tzinfo=timezone.utc), delta=timedelta(seconds=1))
+        blog_post_writer = blog_post['writer']
+        self.assertEqual(blog_post_writer['username'], 'seladb')
+
+
+class MutationTest(GraphQLTestCase):
+
+    GRAPHQL_SCHEMA = schema
+
+    fixtures = ['test_db.json']
+
+    def run_create_blog_mutation(self, title='New Title', content='New Content', username='seladb', assertCorrectResponse=True):
+        response = self.query(
+            '''
+            mutation newBlogPost($title: String!, $content: String!, $username: String!) {
+                createBlogPost(title: $title, content: $content, writerData: { username: $username}) {
+                    blogPost {
+                        title
+                        id
+                        content
+                        published
+                        writer {
+                            username
+                        }
+                    }
+                }
+            }
+            ''',
+            op_name='newBlogPost',
+            variables={
+                'title': title,
+                'content': content,
+                'username': username,
+            }
+        )
+        
+        if assertCorrectResponse:
+            self.assertResponseNoErrors(response)
+
+        content = json.loads(response.content)
+        self.assertIsNotNone(content['data'])
+
+        return content['data']
+
+    def test_create_blog_post(self):
+
+        data = self.run_create_blog_mutation()
+
+        newly_created_blog_post = data['createBlogPost']['blogPost']
+        self.assertEqual(newly_created_blog_post['title'], 'New Title')
+        self.assertEqual(newly_created_blog_post['content'], 'New Content')
+        self.assertAlmostEqual(datetime.fromisoformat(newly_created_blog_post['published']), timezone.now(), delta=timezone.timedelta(seconds=3))
+        blog_post_writer =  newly_created_blog_post['writer']
+        self.assertEqual(blog_post_writer['username'], 'seladb')
+
+
+    # def test_create_blog_post_invalid_username(self):
+    #     try:
+    #         data = self.run_create_blog_mutation(username='asddsfs', assertCorrectResponse=False)
+    #     except Exception as e:
+    #         print(type(e))
