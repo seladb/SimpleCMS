@@ -3,7 +3,8 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.utils import timezone
-from SimpleCmsAPI.models import User, BlogPost, Like, Comment
+from django.contrib.auth.models import User
+from SimpleCmsAPI.models import BlogPost, Like, Comment
 
 def create_user(username='seladb', first_name='Elad', last_name='B'):
     new_user = User(username=username, first_name=first_name, last_name=last_name)
@@ -14,35 +15,6 @@ def create_blog_post(writer, title='New Post', content='Blah Blah Blah...'):
     new_blog_post = BlogPost(title=title, content=content, writer=writer)
     new_blog_post.save()
     return new_blog_post
-
-
-class UserModelTests(TestCase):
-
-    def test_simple_user_create_retrieve(self):
-        create_user()
-        self.assertEqual(User.objects.all().count(), 1)
-
-        create_user(username='seladb2')
-        self.assertEqual(User.objects.all().count(), 2)
-
-        user1 = User.objects.get(id=1)
-        self.assertEqual(user1.username, 'seladb')
-        self.assertEqual(user1.first_name, 'Elad')
-        self.assertAlmostEqual(user1.joined, timezone.now(), delta=datetime.timedelta(seconds=3))
-
-    def test_user_to_string(self):
-        create_user()
-        self.assertEquals(str(User.objects.get(pk=1)), 'Elad B')
-
-    def test_create_blank_user(self):
-        with self.assertRaises(ValidationError):
-            User().full_clean()
-
-    def test_create_two_users_with_same_username(self):
-        create_user()
-        self.assertEqual(User.objects.all().count(), 1)
-        with self.assertRaises(IntegrityError):
-            create_user()
 
 
 class BlogPostModelTests(TestCase):

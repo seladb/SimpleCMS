@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, BlogPost, Comment, Like
+from .models import BlogPost, Comment, Like
 
 class CommentInline(admin.StackedInline):
     model = Comment
@@ -27,5 +27,4 @@ class BlogPostAdmin(admin.ModelAdmin):
     inlines = [LikeInline, CommentInline]
 
 
-admin.site.register(User)
 admin.site.register(BlogPost, BlogPostAdmin)

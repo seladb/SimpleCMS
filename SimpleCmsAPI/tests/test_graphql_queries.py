@@ -52,27 +52,25 @@ class QueryTests(GraphQLTestCase):
 
         blog_post1 = content['data']['allBlogPosts'][0]
         self.assertEquals(blog_post1['title'], 'PcapPlusPlus reached 1000 GitHub stars')
-        self.assertEquals(len(blog_post1['likeSet']), 3)
-        blog_post1_like = blog_post1['likeSet'][2]
+        self.assertEquals(len(blog_post1['likeSet']), 2)
+        blog_post1_like = blog_post1['likeSet'][1]
         self.assertEquals(blog_post1_like['addedBy']['username'], 'omg')
-        self.assertEquals(len(blog_post1['commentSet']), 3)
-        blog_post1_comment = blog_post1['commentSet'][1]
-        self.assertEquals(blog_post1_comment['text'], 'To the next 1000!!!')
+        self.assertEquals(len(blog_post1['commentSet']), 1)
+        blog_post1_comment = blog_post1['commentSet'][0]
+        self.assertEquals(blog_post1_comment['text'], 'Way to go!')
         writer_blog_post1 = blog_post1['writer']
         self.assertEquals(writer_blog_post1['username'], 'seladb')
-        self.assertEquals(writer_blog_post1['firstName'], 'Elad')
 
         blog_post2 = content['data']['allBlogPosts'][1]
-        self.assertEquals(blog_post2['title'], 'Scaling Your Analytics Schema Using Events Grammar')
-        self.assertEquals(len(blog_post2['likeSet']), 2)
+        self.assertEquals(blog_post2['title'], 'PcapPlusPlus README file')
+        self.assertEquals(len(blog_post2['likeSet']), 3)
         blog_post2_like = blog_post2['likeSet'][0]
-        self.assertEquals(blog_post2_like['addedBy']['username'], 'seladb')
-        self.assertEquals(len(blog_post2['commentSet']), 1)
+        self.assertEquals(blog_post2_like['addedBy']['username'], 'omg')
+        self.assertEquals(len(blog_post2['commentSet']), 2)
         blog_post2_comment = blog_post2['commentSet'][0]
-        self.assertEquals(blog_post2_comment['text'], 'Nice post!')
+        self.assertEquals(blog_post2_comment['text'], 'Wow!!')
         writer_blog_post2 = blog_post2['writer']
         self.assertEquals(writer_blog_post2['username'], 'cooluser')
-        self.assertEquals(writer_blog_post2['lastName'], 'User')
 
     def test_blog_post_query(self):
 
@@ -100,6 +98,6 @@ class QueryTests(GraphQLTestCase):
         blog_post = content['data']['blogPost']
         self.assertEqual(blog_post['title'], 'PcapPlusPlus reached 1000 GitHub stars')
         self.assertIn('1000 GitHub stars!!', blog_post['content'])
-        self.assertAlmostEqual(datetime.fromisoformat(blog_post['published']), datetime(2020, 6, 15, 21, 16, 4, tzinfo=timezone.utc), delta=timedelta(seconds=1))
+        self.assertAlmostEqual(datetime.fromisoformat(blog_post['published']), datetime(2020, 6, 18, 8, 49, 31, tzinfo=timezone.utc), delta=timedelta(seconds=1))
         blog_post_writer = blog_post['writer']
         self.assertEqual(blog_post_writer['username'], 'seladb')

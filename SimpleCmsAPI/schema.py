@@ -1,6 +1,7 @@
+from django.contrib.auth.models import User
 import graphene
 from graphene_django.types import DjangoObjectType
-from .models import BlogPost, User, Comment, Like
+from .models import BlogPost, Comment, Like
 
 class BlogPostType(DjangoObjectType):
     class Meta:
