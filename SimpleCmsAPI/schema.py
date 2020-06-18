@@ -60,6 +60,7 @@ class CreateBlogPost(graphene.Mutation):
             content=content,
             writer=get_user_object(writer_data)
         )
+        blog_post.full_clean()
         blog_post.save()
 
         return CreateBlogPost(blog_post=blog_post)
@@ -97,6 +98,7 @@ class AddComment(graphene.Mutation):
             blog_post=BlogPost.objects.get(id=blog_id),
             text=comment_text
         )
+        brand_new_comment.full_clean()
         brand_new_comment.save()
 
         return AddComment(comment=brand_new_comment)
