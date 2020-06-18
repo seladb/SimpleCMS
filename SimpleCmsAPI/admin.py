@@ -19,10 +19,14 @@ class BlogPostAdmin(admin.ModelAdmin):
     def comments(self, blog_object):
         return blog_object.comment_set.count()
 
-    list_display = ('title', 'writer', 'published', 'likes', 'comments')
+    def save_model(self, request, obj, form, change):
+        if obj.writer is None:
+            obj.writer = request.user
+        obj.save()
 
-    readonly_fields = ['published',]
+    list_display = ('title', 'published', 'likes', 'comments')
 
+    readonly_fields = ['published', 'writer']
 
     inlines = [LikeInline, CommentInline]
 
