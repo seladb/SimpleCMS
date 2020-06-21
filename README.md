@@ -1,6 +1,6 @@
 # SimpleCMS
 
-![Django CI](https://github.com/seladb/SimpleCMS/workflows/Django%20CI/badge.svg)
+[![Django CI](https://github.com/seladb/SimpleCMS/workflows/Django%20CI/badge.svg)](https://github.com/seladb/SimpleCMS/actions?query=workflow%3A%22Django+CI%22)
 
 This example project demonstrates the integration between Django and GraphQL.
 It implements a very simple Content Management System (CMS) that allows creation of blog posts and adding likes and comments to them.
