@@ -20,7 +20,9 @@ class BlogPostAdmin(admin.ModelAdmin):
         return blog_object.comment_set.count()
 
     def save_model(self, request, obj, form, change):
-        if obj.writer is None:
+        if not hasattr(obj, 'writer'):
+            obj.writer = request.user
+        elif obj.writer is None:
             obj.writer = request.user
         obj.save()
 
