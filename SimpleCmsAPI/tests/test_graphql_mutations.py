@@ -134,7 +134,7 @@ class MutationAddLikeTest(GraphQLTestCase):
         like_data = self.run_add_like()
 
         self.assertEqual(like_data['addedBy']['username'], 'hereiam')
-        self.assertEqual(like_data['blogPost']['id'], '1')
+        self.assertEqual(like_data['blogPost']['id'], 'QmxvZ1Bvc3ROb2RlOjE=')
         self.assertAlmostEqual(datetime.fromisoformat(like_data['added']), timezone.now(), delta=timezone.timedelta(seconds=3))
 
         self.assertEqual(Like.objects.all().count(), like_count_start + 1)
@@ -206,7 +206,7 @@ class MutationAddCommentTest(GraphQLTestCase):
         comment_data = self.run_add_comment()
 
         self.assertEqual(comment_data['addedBy']['username'], 'hereiam')
-        self.assertEqual(comment_data['blogPost']['id'], '1')
+        self.assertEqual(comment_data['blogPost']['id'], 'QmxvZ1Bvc3ROb2RlOjE=')
         self.assertEqual(comment_data['text'], 'My Comment')
         self.assertAlmostEqual(datetime.fromisoformat(comment_data['added']), timezone.now(), delta=timezone.timedelta(seconds=3))
 

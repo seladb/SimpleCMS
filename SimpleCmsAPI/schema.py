@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 import graphene
 from graphene_django.types import DjangoObjectType
-from .models import BlogPost, Comment, Like
+from graphene_django.filter import DjangoFilterConnectionField
+from graphene import relay
+from .models import BlogPost, Comment, Like, User
 
 class BlogPostType(DjangoObjectType):
     class Meta:
@@ -19,19 +21,18 @@ class LikeType(DjangoObjectType):
     class Meta:
         model = Like
 
+class BlogPostNode(DjangoObjectType):
+    class Meta:
+        model = BlogPost
+        filter_fields = {
+            'id': ['exact'],
+            'title': ['exact', 'contains'], 
+            'writer__username': ['exact'],
+        }
+        interfaces = (relay.Node, )
+
 class Query(object):
-    all_blog_posts = graphene.List(BlogPostType)
-
-    blog_post = graphene.Field(BlogPostType, id=graphene.ID())
-
-    def resolve_all_blog_posts(self, info, **kwargs):
-        return BlogPost.objects.all()
-
-    def resolve_blog_post(self, info, **kwargs):
-        id = kwargs.get('id')
-
-        if id is not None:
-            return BlogPost.objects.get(pk=id)
+    all_blog_posts = DjangoFilterConnectionField(BlogPostNode)
 
 
 class UserInput(graphene.InputObjectType):
