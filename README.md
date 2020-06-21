@@ -79,16 +79,16 @@ Run Docker Compose:
 
 ### Accessing the server
 
-Post installation the server will be available via this URL: <http://127.0.0.1:8000/>
+Post installation the server should be available via this URL: <http://127.0.0.1:8000/>
 
-There are two views currently available:
+There are currently two views available:
 
 - Admin view: <http://127.0.0.1:8000/admin/>
 - GraphiQL view: <http://127.0.0.1:8000/graphql/>
 
 ### Run tests
 
-To run the unit-tests please execute the following command:
+To run the unit-tests execute the following command:
 
 ```shell
 python manage.py test
@@ -96,9 +96,9 @@ python manage.py test
 
 ## GraphQL queries and mutations
 
-This example project exposes the following GraphQL queries and mutations. Before running these examples in [GraphiQL web-view](http://127.0.0.1:8000/graphql/) please create users via [Django Admin interface](http://127.0.0.1:8000/admin/)
+Below are the GraphQL queries and mutations currently available. [GraphiQL](http://127.0.0.1:8000/graphql/) can be used to test them. Before running queries please make sure to create users via [Django Admin interface](http://127.0.0.1:8000/admin/)
 
-- Get blog posts currently available in the database with optional filtering by blog post ID, blog post writer, and blog post title:
+- Fetch blog posts from the database with optional filtering by blog post ID, blog post writer, and blog post title:
 
   ```graphql
   query allBlogPostsQuery($id: ID, $writer_Username: String, $title_Contains: String, $title: String) {
