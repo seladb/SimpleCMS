@@ -98,53 +98,32 @@ python manage.py test
 
 This example project exposes the following GraphQL queries and mutations. Before running these examples in [GraphiQL web-view](http://127.0.0.1:8000/graphql/) please create users via [Django Admin interface](http://127.0.0.1:8000/admin/)
 
-- Get all blog posts currently available in the database:
+- Get blog posts currently available in the database with optional filtering by blog post ID, blog post writer, and blog post title:
 
   ```graphql
-  query {
-    allBlogPosts {
-      id
-      title
-      content
-      published
-      writer {
-        username
-      }
-      likeSet {
-        addedBy {
-          username
+  query allBlogPostsQuery($id: ID, $writer_Username: String, $title_Contains: String, $title: String) {
+    allBlogPosts(id: $id, writer_Username: $writer_Username, title_Contains: $title_Contains, title: $title) {
+      edges {
+        node {
+          id
+          title
+          content
+          published
+          writer {
+            username
+          }
+          likeSet {
+            addedBy {
+              username
+            }
+          }
+          commentSet {
+            addedBy {
+              username
+            }
+            text
+          }
         }
-      }
-      commentSet {
-        addedBy {
-          username
-        }
-        text
-      }
-    }
-  }
-  ```
-
-- Get information about a specific blog post by ID:
-
-  ```graphql
-  query {
-    blogPost(id: 1) {
-      title
-      content
-      writer {
-        username
-      }
-      likeSet {
-        addedBy {
-          username
-        }
-      }
-      commentSet {
-        addedBy {
-          username
-        }
-        text
       }
     }
   }
