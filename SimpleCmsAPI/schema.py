@@ -12,6 +12,7 @@ class BlogPostType(DjangoObjectType):
 class UserType(DjangoObjectType):
     class Meta:
         model = User
+        fields = ('username', 'first_name', 'last_name', 'date_joined', 'blogpost_set', 'comment_set')
 
 class CommentType(DjangoObjectType):
     class Meta:
@@ -26,26 +27,31 @@ class BlogPostNode(DjangoObjectType):
         model = BlogPost
         filter_fields = {
             'id': ['exact'],
-            'title': ['exact', 'contains'], 
+            'title': ['exact', 'contains'],
             'writer__username': ['exact'],
         }
         interfaces = (relay.Node, )
 
+
 class Query(object):
     all_blog_posts = DjangoFilterConnectionField(BlogPostNode)
+    all_users = graphene.List(UserType, username=graphene.String())
 
+    def resolve_all_users(self, info, **kwargs):
+        users = User.objects.filter(is_superuser=False)
+        if kwargs.get('username'):
+            users = users.filter(username=kwargs.get('username'))
+        return users
 
 class UserInput(graphene.InputObjectType):
     username = graphene.String()
     id = graphene.ID()
-
 
 def get_user_object(user_data):
     if user_data.username is not None:
         return User.objects.get(username=user_data.username)
     elif user_data.id is not None:
         return User.objects.get(id=user_data.id)
-
 
 class CreateBlogPost(graphene.Mutation):
     class Arguments:
@@ -67,7 +73,6 @@ class CreateBlogPost(graphene.Mutation):
 
         return CreateBlogPost(blog_post=blog_post)
 
-
 class AddLike(graphene.Mutation):
     class Arguments:
         blog_id = graphene.NonNull(graphene.ID)
@@ -83,7 +88,6 @@ class AddLike(graphene.Mutation):
         )
         brand_new_like.save()
         return AddLike(like=brand_new_like)
-
 
 class AddComment(graphene.Mutation):
     class Arguments:
@@ -104,7 +108,6 @@ class AddComment(graphene.Mutation):
         brand_new_comment.save()
 
         return AddComment(comment=brand_new_comment)
-
 
 class Mutation(graphene.ObjectType):
     create_blog_post = CreateBlogPost.Field()
