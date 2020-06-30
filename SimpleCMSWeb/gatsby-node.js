@@ -17,30 +17,27 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
   const BlogPostTemplate = path.resolve("./src/templates/blogpost.js")
   const PageTemplate = path.resolve("./src/templates/page.js")
-  const result = await graphql(`
+  const ServerQuery = await graphql(`
   {
-    allBlogPostsQuery {
+    serverQuery {
       allBlogPosts {
         edges {
           node {
             id
-            title
-            published
-            writer {
-              username
-              id
-            }
           }
         }
+      }
+      allUsers {
+        username
       }
     }
   }
   `)
-  if (result.errors) {
-    reporter.panicOnBuild(`Error while running GraphQL query.`)
+  if (ServerQuery.errors) {
+    reporter.panicOnBuild(`Error while running BlogPost GraphQL query.`)
     return
   }
-  const BlogPosts = result.data.allBlogPostsQuery.allBlogPosts.edges
+  const BlogPosts = ServerQuery.data.serverQuery.allBlogPosts.edges
   BlogPosts.forEach(post => {
     createPage({
       path: `/${decodeBlogPostId(post.node.id)}`,
@@ -49,15 +46,15 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         id: post.node.id,
       },
     })
-    const Pages = result.data.allBlogPostsQuery.allBlogPosts.edges
-    Pages.forEach(page => {
-      createPage({
-        path: `/${page.node.writer.username}`,
-        component: PageTemplate,
-        context: {
-          id: page.node.writer.id,
-        },
-      })
+  })
+  const Users = ServerQuery.data.serverQuery.allUsers
+  Users.forEach(user => {
+    createPage({
+      path: `/${user.username}`,
+      component: PageTemplate,
+      context: {
+        username: user.username
+      }
     })
   })
 }

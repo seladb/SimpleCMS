@@ -1,20 +1,15 @@
 import React from "react"
-import { Link } from "gatsby"
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import formatDate from "../utils/utils"
+import BlogPostSummary from "../components/blogPostSummary"
 
 export default ({data}) => (
   <Layout>
     <SEO title="Page two" />
-    {data.allBlogPostsQuery.allBlogPosts.edges.map(({node}) => {
+    {data.serverQuery.allBlogPosts.edges.map(({node}) => {
       return (
-        <p key={node.id}>
-          <Link to={atob(node.id).split(':').pop()}><h3>{node.title}</h3></Link>
-          <div>By <Link to={node.writer.username}>@{node.writer.username}</Link></div>
-          <div>Published: {formatDate(node.published)}</div>
-        </p>
+        <BlogPostSummary data={node} />
       )
     })}
   </Layout>
@@ -22,7 +17,7 @@ export default ({data}) => (
 
 export const query = graphql`
   query {
-    allBlogPostsQuery {
+    serverQuery {
       allBlogPosts {
         edges {
           node {
@@ -31,6 +26,12 @@ export const query = graphql`
             published
             writer {
               username
+            }
+            likeSet {
+              id
+            }
+            commentSet {
+              id
             }
           }
         }

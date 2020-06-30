@@ -5,7 +5,7 @@
 This example project demonstrates the integration between Django and GraphQL.
 It implements a very simple Content Management System (CMS) that allows creation of blog posts and adding likes and comments to them.
 
-The project uses [Django](https://www.djangoproject.com/) and [Graphene-Django](https://docs.graphene-python.org/projects/django/en/latest/) as Backend and *TODO* as a Frontend.
+The project uses [Django](https://www.djangoproject.com/) and [Graphene-Django](https://docs.graphene-python.org/projects/django/en/latest/) as Backend and [Gatsby](https://www.gatsbyjs.org) as a Frontend.
 
 *NOTE: this example requires Python 3.7 or later*
 
@@ -20,6 +20,8 @@ Clone the repo:
 ```shell
 git clone https://github.com/seladb/SimpleCMS
 ```
+
+#### Backend installation:
 
 Create a local `virtualenv` environment:
 
@@ -42,7 +44,7 @@ Create admin user (required on first run only):
 Run migrations and start server:
 
 ```shell
-./run-local.sh
+./run-backend-local.sh
 ```
 
 Alternatively you can run migrations and start the server separately:
@@ -54,6 +56,20 @@ python manage.py migrate
 ```shell
 python manage.py runserver
 ```
+
+#### Frontend installation:
+
+Install Gatsby:
+
+```shell
+npm install -g gatsby-cli
+```
+
+*TODO*
+
+*NOTE: by default both Django and Gatsby are using port 8000, so to run both of them locally change Gatsby port to 8080*
+
+Open a web browser and go to the following URL: http://localhost:8080/
 
 ### Run using Docker Compose
 

@@ -31,15 +31,9 @@ module.exports = {
       resolve: "gatsby-source-graphql",
       options: {
         typeName: "BlogPostNodeConnection",
-        fieldName: "allBlogPostsQuery",
+        fieldName: "serverQuery",
         url: "http://127.0.0.1:8000/graphql/",
       },
     },
-    // {
-    //   resolve: "gatsby-plugin-extract-schema",
-    //   options: {
-    //     dest: `${__dirname}/all_schema.json`,
-    //   },
-    // },
   ],
 }
