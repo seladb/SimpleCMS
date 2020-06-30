@@ -7,7 +7,7 @@ It implements a very simple Content Management System (CMS) that allows creation
 
 The project uses [Django](https://www.djangoproject.com/) and [Graphene-Django](https://docs.graphene-python.org/projects/django/en/latest/) as Backend and [Gatsby](https://www.gatsbyjs.org) as a Frontend.
 
-*NOTE: this example requires Python 3.7 or later*
+*NOTE: this example requires Python 3.7 or later and Node 12 or later*
 
 ## Installation
 
@@ -41,6 +41,14 @@ Create admin user (required on first run only):
 ./create-admin-local.sh
 ```
 
+Alternatively you can load some demo data to your DB:
+
+```shell
+./load-demo-data.sh
+```
+
+*The password to `admin` is `admin` and the rest of the users is `simplecms`*
+
 Run migrations and start server:
 
 ```shell
@@ -65,11 +73,27 @@ Install Gatsby:
 npm install -g gatsby-cli
 ```
 
-*TODO*
+Install dependencies:
+
+```shell
+npm --prefix ./SimpleCMSWeb install ./SimpleCMSWeb
+```
+
+Make Sure Backend is up and then run:
+
+```shell
+./run-frontend-local.sh
+```
+
+Alternatively you can start Gatsby without the `run-frontend-local.sh` script:
+
+```shell
+cd SimpleCMSWeb
+gatsby build
+gatsby serve --port 8080
+```
 
 *NOTE: by default both Django and Gatsby are using port 8000, so to run both of them locally change Gatsby port to 8080*
-
-Open a web browser and go to the following URL: http://localhost:8080/
 
 ### Run using Docker Compose
 
@@ -81,19 +105,19 @@ Clone the repo:
 git clone https://github.com/seladb/SimpleCMS
 ```
 
-Create admin user (required on first run only):
-
-```shell
-./create-admin-docker.sh
-```
-
 Run Docker Compose:
 
 ```shell
 ./run-docker.sh
 ```
 
-### Accessing the server
+This process will create docker images of PostgreSQL, Django backend and Gatsby frontend.
+
+It will also load some demo data into the DB. 
+
+*The password to `admin` is `admin` and the rest of the users is `simplecms`*
+
+### Accessing the server and the frontend
 
 Post installation the server should be available via this URL: <http://127.0.0.1:8000/>
 
@@ -101,6 +125,8 @@ There are currently two views available:
 
 - Admin view: <http://127.0.0.1:8000/admin/>
 - GraphiQL view: <http://127.0.0.1:8000/graphql/>
+
+The Gatsby frontend is available via this URL: <http://127.0.0.1:8080>
 
 ### Run tests
 

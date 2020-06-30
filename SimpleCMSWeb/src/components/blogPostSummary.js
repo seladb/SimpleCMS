@@ -1,5 +1,6 @@
 import React from "react"
 import { FaThumbsUp, FaComment } from 'react-icons/fa';
+import atob from "atob"
 import { Link } from "gatsby"
 import formatDate from "../utils/utils"
 

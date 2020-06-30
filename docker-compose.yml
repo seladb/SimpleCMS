@@ -7,9 +7,11 @@
         - POSTGRES_DB=postgres
         - POSTGRES_USER=postgres
         - POSTGRES_PASSWORD=postgres
-    web:
-      build: .
-      command: ./Scripts/run-docker-compose.sh
+    backend:
+      build:
+        context: .
+        dockerfile: Dockerfile-backend
+      command: ./Scripts/run-backend-docker-compose.sh
       volumes:
         - .:/code
       environment:
@@ -18,4 +20,14 @@
         - "8000:8000"
       depends_on:
         - db
-
+    frontend:
+      build:
+        context: .
+        dockerfile: Dockerfile-frontend
+      command: ./Scripts/run-frontend-docker-compose.sh
+      volumes:
+        - .:/app
+      ports:
+        - "8080:8080"
+      depends_on:
+        - backend
